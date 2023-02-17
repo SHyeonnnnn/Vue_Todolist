@@ -121,14 +121,16 @@ export default {
     }
 
 // 밑줄처리
-    const toggleTodo = async (index) => {
+    const toggleTodo = async (index, checked) => {
       error.value='';
       const id = todos.value[index].id;
       try{
         await axios.patch('http://localhost:3000/todos/' + id, {
-          completed: !todos.value[index].completed
+          // completed: !todos.value[index].completed
+          completed: checked
         });
-        todos.value[index].completed =! todos.value[index].completed; // 반대값 대입시켜 completed값 변경기능
+        // todos.value[index].completed =! todos.value[index].completed; // 반대값 대입시켜 completed값 변경기능
+        todos.value[index].completed = checked // 반대값 대입시켜 completed값 변경기능
       }catch(err){
         console.log(err)
         error.value="수정에러발생"
@@ -163,21 +165,24 @@ export default {
 
 <style>
   *{margin: 0;padding: 0;list-style: none;box-sizing: border-box;text-decoration: none;}
-  button{border-radius: 10px;}
+  button{border-radius: 12px;box-shadow: 1px 1px 2px #3f3131;cursor: pointer;}
   .container{width: 100%; max-width: 1024px;margin: 0 auto;padding: 0 20px;}
-  h2{text-align: center;color: #36767e;margin-bottom: 50px;margin-top: 50px;font-size: 4rem;text-shadow: 4px 0 3px #039f61;}
+  h2{text-align: center;color: #36767e;margin-bottom: 50px;margin-top: 50px;font-size: 4rem;text-shadow: 4px 1px 3px #039f61;}
   .d-flex{display: flex;}
   .flex-grow-1{flex-grow: 1;}
   .flex-grow-1 input{width: 98%;padding: 10px 20px;}
-  .btn{padding: 11px 30px;border: none; background: #20545b;color: #fff;}
+  .btn{padding: 10px 30px;border: none; background: #20545b;color: #fff; }
   .btn:hover{background: #3daebd;}
   .btn:active{background: #07cae4;}
+  .btnF{padding: 10px 23px;border: none; background: #da8484;color: #fff;}
+  .btnF:hover{background: #ea1010;}
+  .btnF:active{background: #623b3b;}
   form{margin-bottom: 50px;}
   .card{margin: 10px 0;}
   .card-body{border: 1px solid #ccc; padding: 10px 20px;display: flex;justify-content: space-between;}
   .form-check-input{margin-right: 10px;}
   .todoStyle{text-decoration: line-through;color: gray;}
-  .btnR{padding: 4px 20px; background: #da8484; color: #fff; outline: none; border: none;}
+  .btnR{padding: 4px 20px; border-radius: 6px;background: #da8484; color: #fff; outline: none; border: none;}
   .btnR:hover{background: #ea1010;}
   .btnR:active{background: #623b3b;}
   .form-control{width: 100%;border: 1px solid #ddd; margin-bottom: 10px;padding: 10px 20px;}

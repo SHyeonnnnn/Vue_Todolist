@@ -66,44 +66,24 @@
       "id": 15
     },
     {
-      "subject": "1",
-      "completed": false,
-      "id": 16
-    },
-    {
-      "subject": "2",
-      "completed": false,
-      "id": 17
-    },
-    {
-      "subject": "3",
-      "completed": false,
-      "id": 18
-    },
-    {
-      "subject": "4",
-      "completed": false,
-      "id": 19
-    },
-    {
-      "subject": "5",
-      "completed": false,
-      "id": 20
-    },
-    {
       "subject": "TODO-List",
       "completed": false,
       "id": 21
     },
     {
       "subject": "뭐가뭔지무슨소린지하나두모르게따",
-      "completed": false,
+      "completed": true,
       "id": 22
     },
     {
-      "subject": "ㅂㅈㅇ",
-      "completed": false,
+      "subject": "삭제테스트",
+      "completed": true,
       "id": 23
+    },
+    {
+      "subject": "다른거",
+      "completed": true,
+      "id": 24
     }
   ]
 }
