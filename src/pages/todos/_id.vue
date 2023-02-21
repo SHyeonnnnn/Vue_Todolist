@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <h1>Todo page</h1>
         <div v-if="loading">
             Loading...
         </div>
@@ -9,73 +8,124 @@
                 <div>
                     <div class="form-group">
                         <label>Todo Subject</label>
-                        <input type="text" class="form-control" v-model="todo.subject">
+                        <input type="text" class="from-control" v-model="todo.subject">
+                        <div v-if="subjectError">{{ subjectError }}</div>
                     </div>
                 </div>
-                <div>
+                <div v-if="editing">
                     <div class="form-group">
                         <label>Status</label>
+                        
                         <div>
-                            <button @click="toggleTodoStatus" type="button" class="btn" :class="todo.completed || 'btnF'">{{todo.completed ? '완료' : '미완료'}}</button>
+                            <button @click="toggleTodoStatus" type="button" class="btn" :class="todo.completed ? 'btnGG':'btnRR'">{{todo.completed ? '완료':'미완료'}}</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <button class="btn" type="submit" :disabled="!todoUpdated">저장</button>
+            <div class="bodyWrap">
+                <div class="form-group">
+                    <label>Body</label>
+                    <textarea v-model="todo.body" cols="30" rows="10"></textarea>
+                </div>
+            </div>
+            <button class="btn" type="submit"  :disabled="!todoUpdated">{{ editing ? '저장' : '만들기' }}</button>
             <button class="btn btnl" @click="moveToTodoListPage">취소</button>
         </form>
     </div>
 </template>
+
 <script>
-    import { useRoute, useRouter } from 'vue-router';
+    import {useRoute, useRouter} from 'vue-router';
     import axios from 'axios';
-    import { ref, computed } from 'vue';
-    import _ from 'lodash'
+    import { ref, computed} from 'vue';
+    import _ from 'lodash';
     export default {
-        setup() {
+        props:{
+            editing: {
+                type: Boolean,
+                default: false
+            }
+        },
+        setup(props) {
             const route=useRoute();
             const router=useRouter();
-            const todo=ref('');
-            const loading = ref(true);
+            const subjectError=ref('');
+            const todo=ref({
+                subject:'',
+                completed:false,
+                body:''
+            });
+            const loading= ref(true);
+            const originalTodo=ref(null);
             const todoId=route.params.id
-            const originalTodo = ref('')
-            const getTodo = async () => {
-                const res = await axios.get(`http://localhost:3000/todos/${todoId}`);
-                todo.value = res.data
-                originalTodo.value = res.data
-                loading.value = false
+
+            //console.log(route.params.id)
+            const getTodo = async () =>{
+                const res = await axios.get(`http://localhost:3000/todos/${todoId} ` );
+                todo.value=res.data;
+                loading.value=false;
+                originalTodo.value = {...res.data} 
             }
-            const onSave = async () => {
-                const res = await axios.put(`http://localhost:3000/todos/${todoId}`, {
-                    subject: todo.value.subject,
-                    completed: todo.value.completed,
-                });
+           
+
+            const toggleTodoStatus = () =>{
+                todo.value.completed = !todo.value.completed;
             }
-            const todoUpdated = computed(() => {
-                return !_.isEqual(todo.value, originalTodo.value)
-            })
-            const toggleTodoStatus  = () => {// 완료미완료버튼
-                todo.value.completed =! todo.value.completed
-            }
-            const moveToTodoListPage = () => {// 취소버튼
+            const moveToTodoListPage =() =>{
                 router.push({
                     name:'Todos'
                 })
+            };
+            if(props.editing){
+                getTodo();
             }
-            getTodo();
+            
+
+            const onSave = async () => {
+                //subjectError.value='';
+                if(!todo.value.subject){
+                    subjectError.value='내용을 작성해주세요'
+                    return;
+                }
+                try{
+                    let res;
+                    const data={
+                        subject:todo.value.subject,
+                        completed:todo.value.completed,
+                        body:todo.value.body,
+                    }
+                    if(props.editing){
+                        res = await axios.put(`http://localhost:3000/todos/${todoId}`,data );
+                    } else {
+                         res = await axios.post(`http://localhost:3000/todos`, data); 
+                         todo.value.subject = "";
+                         todo.value.body ="";
+                   
+                }
+                    originalTodo.value = {...res.data}    
+                }catch(error){
+                    console.log(error);
+                }
+               
+            }
+            const todoUpdated = computed(() => {
+                return !_.isEqual(todo.value, originalTodo.value)
+            }) 
             return {
                 todo,
                 toggleTodoStatus,
                 moveToTodoListPage,
                 onSave,
-                todoUpdated
+                todoUpdated,
+                /* loading, */
+                subjectError,
             }
         }
     }
 </script>
 <style>
     h1{margin: 30px 0 20px;}
-    .form-group{display: flex;flex-direction: column;}
+    .form-group{display: flex;flex-direction: column;margin-top: 10px;}
     .form-group label{font-weight: bold;margin-bottom: 10px;}
     .form-control{padding: 10px 20px;}
     .row1{display: flex;justify-content: space-between;}
@@ -83,4 +133,9 @@
     .btnl{margin-left: 20px;background: #ededed; color: #222;}
     .btnl:hover{background: #ffffff; color: #222;}
     .btnl:active{background: #8b8b8b; color: #222;}
+    .bodyWrap{margin-bottom: 10px;}
+</style>
+<style scoped>
+    .row1{margin-bottom: 20px;}
+    .btnD{padding: 12px 30px; border: none}
 </style>
