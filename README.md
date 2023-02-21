@@ -1,24 +1,18 @@
-# todolist
+# Vue3 TodoList
 
-## Project setup
+## 할일 추가
 ```
-npm install
-```
+<img src="../img/1.png" width="450px" height="300px" title="px(픽셀) 크기 설정" alt="1"></img>
 
-### Compiles and hot-reloads for development
-```
-npm run serve
 ```
 
-### Compiles and minifies for production
+### 완료한일 선긋기
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+<img src="../img/2.png" width="450px" height="300px" title="px(픽셀) 크기 설정" alt="1"></img>
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 수정사항 저장 및 삭제 가능
+```
+<img src="../img/3.png" width="450px" height="300px" title="px(픽셀) 크기 설정" alt="1"></img>
+```
+
